@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Mview/etc/mview.xsd">
+    <view id="melthedev_meilisearch_products" class="MelTheDev\MeiliSearch\Model\Indexer\Product" group="indexer">
+        <subscriptions>
+            <table name="catalog_product_entity" entity_column="entity_id" />
+            <table name="catalog_product_entity_datetime" entity_column="entity_id" />
+            <table name="catalog_product_entity_decimal" entity_column="entity_id" />
+            <table name="catalog_product_entity_gallery" entity_column="entity_id" />
+            <table name="catalog_product_entity_int" entity_column="entity_id" />
+            <table name="catalog_product_entity_media_gallery_value" entity_column="entity_id" />
+            <table name="catalog_product_entity_text" entity_column="entity_id" />
+            <table name="catalog_product_entity_tier_price" entity_column="entity_id" />
+            <table name="catalog_product_entity_varchar" entity_column="entity_id" />
+            <table name="catalog_product_website" entity_column="product_id" />
+            <table name="catalog_category_product" entity_column="product_id" />
+            <table name="cataloginventory_stock_item" entity_column="product_id" />
+        </subscriptions>
+    </view>
+    <view id="melthedev_meilisearch_categories" class="MelTheDev\MeiliSearch\Model\Indexer\Category" group="indexer">
+        <subscriptions>
+            <table name="catalog_category_entity" entity_column="entity_id" />
+            <table name="catalog_category_entity_decimal" entity_column="entity_id" />
+            <table name="catalog_category_entity_int" entity_column="entity_id" />
+            <table name="catalog_category_entity_text" entity_column="entity_id" />
+            <table name="catalog_category_entity_varchar" entity_column="entity_id" />
+            <table name="catalog_category_entity_datetime" entity_column="entity_id" />
+        </subscriptions>
+    </view>
+    <view id="melthedev_meilisearch_pages" class="MelTheDev\MeiliSearch\Model\Indexer\Page" group="indexer">
+        <subscriptions>
+            <table name="cms_page" entity_column="page_id" />
+        </subscriptions>
+    </view>
+    <view id="melthedev_meilisearch_delete_products" class="MelTheDev\MeiliSearch\Model\Indexer\DeleteProduct" group="indexer">
+    </view>
+</config>

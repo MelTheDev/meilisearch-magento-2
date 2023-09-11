@@ -1,0 +1,26 @@
+<?php
+
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \MelTheDev\MeiliSearch\ViewModel\Configuration $viewModel */
+
+$viewModel = $block->getData('view_model');
+$configuration = $viewModel->getConfiguration();
+$meilisearchConfig = $viewModel->getConfig();
+//$configuration = $block->getConfiguration();
+//$meilisearchConfig = $viewModel->getConfig();
+
+?>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default%2CArray.prototype.includes%2CPromise" crossorigin="anonymous"></script>
+<script>
+    <?php
+    if ($configuration['instant']['enabled'] === true && $configuration['isSearchPage'] === true) :
+        $css = '<style type="text/css">' . $configuration['instant']['selector'] . ' {display:none}</style>';
+    ?>
+	// Hide the instant-search selector ASAP to remove flickering. Will be re-displayed later with JS.
+	document.write('<?php /* @noEscape */ echo $css; ?>');
+    <?php
+    endif;
+    ?>
+    window.meilisearchConfig = <?php /* @noEscape */ echo json_encode($meilisearchConfig); ?>;
+	window.algoliaConfig = <?php /* @noEscape */ echo json_encode($configuration); ?>;
+</script>

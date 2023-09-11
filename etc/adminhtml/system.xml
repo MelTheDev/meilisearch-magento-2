@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="melthedev_meilisearch" translate="label" sortOrder="100002">
+            <label><![CDATA[MelTheDev MeiliSearch]]></label>
+        </tab>
+        <section id="melthedev_meilisearch_credentials" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Credentials and Basic Setup</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="credentials" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Credentials and Setup</label>
+                <field id="search_api_ip" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>API URL</label>
+                    <comment>Search API IP address with PORT. Example: http://127.0.0.1:7700</comment>
+                </field>
+                <field id="api_key" translate="label comment" type="password" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>API Key</label>
+                </field>
+                <field id="index_prefix" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Index Name Prefix</label>
+                    <comment>
+                        <![CDATA[
+                            Specify different index prefixes for each environment (eg. local, staging, production). It will prevent your data from being overridden.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_backend" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Indexing</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want the MeiliSearch extension to push your data to MeiliSearch?<br>
+                            The benefit here is that MeiliSearch will manage to keep your data up to date.
+                            If you choose "No", you will need to push and manage your data in a different way.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_frontend" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Search</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to use MeiliSearch for search?<br>
+                            If not, Magento will perform all searches and not touch MeiliSearch at all.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="debug" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                           Logging generates a significant amount of data and can affect performance of the extension. Use it only for debugging.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_autocomplete" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Autocomplete Menu</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="autocomplete" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Autocomplete Menu</label>
+                <field id="is_popup_enabled" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable Autocomplete Menu</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display a search-as-you-type drop-down menu?<br>
+                            It requires your theme to expose a <code>top.search</code> and <code>content</code> block.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="autocomplete_selector" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Search Input Container Selector</label>
+                    <comment>
+                        <![CDATA[
+                            If you don't have the <code>top.search</code> block, you can specify a DOM selector of your dom container here to make the search work.
+                            Default value is <code>.meilisearch-search-input</code>.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="nb_of_products_suggestions" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of products</label>
+                    <comment>
+                        <![CDATA[
+                            How many products do you want to display in the autocomplete menu? Default value is 6.<br>
+                            Set 0 to disable the products section.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="nb_of_categories_suggestions" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of categories</label>
+                    <comment>
+                        <![CDATA[
+                            How many categories do you want to display in the autocomplete menu? Default value is 2.<br>
+                            Set 0 to disable the categories section.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="nb_of_queries_suggestions" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of queries</label>
+                    <comment>
+                        <![CDATA[
+                            How many query suggestions do you want to display in the autocomplete menu? By default it's disabled.<br>
+                            Set 0 to disable the query suggestion section.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_popularity" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Minimal query popularity</label>
+                    <comment>
+                        <![CDATA[
+                            The minimal number of times a query has been performed in order to be suggested in the autocomplete menu. Default value is 1000.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_number_of_results" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Minimal number of results per query</label>
+                    <comment>
+                        <![CDATA[
+                            The minimal number of results a query needs in order to be suggested. Default value is 2.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="sections" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Additional Sections</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\Sections</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Specify additional sections you want to include in the autocomplete menu (eg. pages, colors, manufacturers).
+                            <br><span class="">&#9888;</span> All attributes used here have to be configured as facets in the <strong>Instant Search Results Page Configuration</strong> panel.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="excluded_pages" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Excluded Pages</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\CustomPages</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Specify pages you don't want to search in.<br>
+                            <span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Pages indexer after you've modified this panel.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="render_template_directives" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Render template directives</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to have CMS pages' templates' content (e.g. <code>{{block type="core/template" ...}}</code>) indexed?
+                            <br><span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Pages indexer after you've modified this setting.
+                            ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="debug" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable autocomplete menu's debug mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            When set to "Yes", the autocomplete menu won't disappear when clicked outside of the menu.
+                            It's useful when you debug or style a look and feel of the autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="navigator" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable keyboard navigation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="is_popup_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_instant" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Instant Search Results Page</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="instant" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Instant Search Results Page</label>
+                <field id="is_instant_enabled" translate="label comment" type="select" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Instant Search Results Page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want the products inside a search results page to be searchable and updated with as-you-type experience?<br>
+                            It requires your theme to expose a <code>top.search</code> and <code>content</code> block.
+                            <br><span class="">&#9888;</span> Enabling instant search results page can potentially break your design and some work will be required to have a good integration with your theme.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="instant_selector" translate="label comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>DOM Selector</label>
+                    <comment>
+                        <![CDATA[
+                            DOM selector of block in which the search results page will be displayed using JavaScript.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_instant_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="number_product_results" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of products per page</label>
+                    <comment>
+                        <![CDATA[
+                            The number of products displayed on the instant search results page. Default value is 9.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="facets" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Facets</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\FacetDistribution</frontend_model>
+                    <backend_model>MelTheDev\MeiliSearch\Model\Backend\FacetDistribution</backend_model>
+                    <comment>
+                        <![CDATA[Specify the filtering options you want to offer on a search results page.<br>
+                                &nbsp; - Disjunctive allows a selection of different values per facet (e.g. hotels with 4 OR 5 stars).<br>
+                                &nbsp; - Conjunctive allows a selection of only one value per facet (e.g. only "Size M").
+                            <br><br>
+                            <b>Create a Query rule</b> for a facet when you want MeiliSearch to automatically filter on a facet
+                                when a user searches for its value in a query. For example, when you create a Query rule
+                                for a "color" facet and a user is searching "red shorts", MeiliSearch will internally filter
+                                results for the color "red" and search only "shorts". It leads to more relevant results.
+                                This query rule is applied for both autocomplete and instant search results. <br> ]]>
+                    </comment>
+                </field>
+                <field id="max_values_per_facet" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of values per facet</label>
+                    <comment>
+                        <![CDATA[
+                            The number of values each facet can display. Default value is 10.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="sorts" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sorts</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\Sorts</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Specify different sorting options you want to offer on a search results page.<br>
+                            Each sort will significantly increase the number of records you store in MeiliSearch.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="instantsearch_searchbox" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable searchBox Widget in Instant Search Page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[The searchBox widget is used to let the user perform a text-based query.]]>
+                    </comment>
+                </field>
+                <field id="replace_categories" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Replace categories page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to replace default Magento category pages (PLPs) by an instant search results page?
+                        ]]>
+                    </comment>
+                </field>
+                <field id="show_suggestions_on_no_result_page" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show query suggestions when no results</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display the most popular query suggestions on instant search results page when there are no results?
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_instant_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="add_to_cart_enable" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Add to Cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display an "Add To Cart" button in a product on an instant search results page?
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_instant_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="infinite_scroll_enable" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Infinite Scrolling?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display a "Show More" button to load more results instead of using traditional pagination?
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_instant_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_products" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Products</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="products" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Products</label>
+                <field id="product_additional_attributes" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Attributes</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\ProductAttributes</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Specify a product's attributes your users can search on (searchable) and the ones required to display search results.
+                            The order of the searchable attributes matters: a query matching the first searchable attribute of a product will put this product before the others in the results.<br>
+                            <br><span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Products indexer after you've modified this panel.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="custom_ranking_product_attributes" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Ranking</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\CustomRankingProduct</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Configure attributes for Custom Ranking - for example, an attribute that reflects popularity of a product (eg. stock status, number of sales).
+                            <br><span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Products indexer after you've modified this panel.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="use_adaptive_image" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Replace default image by matching variation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            When a customer searches for a "blue dress", MeiliSearch will display the image associated with the blue variation instead of the default picture.
+                            The same happens when a customer refines products by any color.
+                            <br><br>If a customer searches for "blue dress" and refines by "red" color, MeiliSearch will display images for the red (refined) color.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="index_out_of_stock_options" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Index out of stock options for configurable products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_categories" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Categories</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="categories" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Categories</label>
+                <field id="category_additional_attributes" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Attributes</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\CategoryAttributes</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Specify a category's attributes your users can search on (searchable).
+                            The order of the searchable attributes matters: a query matching the first searchable attribute of a category will put this category before the others in the results.<br>
+                            <br><span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Categories indexer after you've modified this panel.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="custom_ranking_category_attributes" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ranking</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\CustomRankingCategory</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Configure attributes for example, an attribute that reflects popularity of a category (eg. products count, total number of sales of the category).
+                            <br><span class="">&#9888;</span> Do not forget to reindex the MeiliSearch Search Categories indexer after you've modified this panel.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="show_cats_not_included_in_navigation" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show categories not included in navigation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display all categories in both the autocomplete menu and instant search results page ignoring the "Include in navigation menu" setting?
+                        ]]>
+                    </comment>
+                </field>
+                <field id="index_empty_categories" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Index empty categories?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to display all categories in both the autocomplete menu and instant search results page ignoring if they contain products or not?
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_images" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Images</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="image" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Images</label>
+                <field id="width" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Width</label>
+                </field>
+                <field id="height" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Height</label>
+                    <comment>
+                        <![CDATA[
+                            You can specify the size of the images used on the instant search results page.<br>
+                            If your images are already present in some size, eg. 265x265, MeiliSearch index job may not have to resize those, potentially saving time and resources.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="type" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Type</label>
+                    <source_model>MelTheDev\MeiliSearch\Model\Source\ImageType</source_model>
+                    <comment>
+                        <![CDATA[
+                            What type of image do you want to display on the instant search results page.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_queue" translate="label" type="text" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Indexing Queue / Cron</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="queue" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Indexing Queue / Cron</label>
+                <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Indexing Queue</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If enabled, all indexing operations (add, remove & update operations) will be done asynchronously using the CRON mechanism.<br>
+                            <br>
+                            To schedule the run you need to add this in your crontab:<br>
+                            <code>*/5 * * * * php /absolute/path/to/magento/bin/magento indexer:reindex melthedev_meilisearch_queue_runner</code>
+                            <br><span class="">&#9888;</span> Enabling this option is recommended in production or if your store has a lot of products.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="number_of_job_to_run" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of jobs to run each time the cron is run</label>
+                    <comment>
+                        <![CDATA[
+                            Number of queued jobs to run each time the cron is launched. Default value is 5.
+                            <br><span class="">&#9888;</span> Each time the cron runs it will process ("Max number of element per indexing job" * "Number of jobs to run each time the cron is run")
+                            products.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+                <field id="number_of_retries" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Number of times to retry processing of queued jobs</label>
+                    <source_model>MelTheDev\MeiliSearch\Model\Source\RetryValues</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+        <section id="melthedev_meilisearch_advanced" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Advanced</label>
+            <tab>melthedev_meilisearch</tab>
+            <resource>MelTheDev_MeiliSearch::melthedev_meilisearch</resource>
+            <group id="advanced" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Advanced</label>
+                <field id="number_of_element_by_page" translate="label comment" type="text" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <validate>validate-digits</validate>
+                    <label>Maximal number of elements per indexing job</label>
+                    <comment><![CDATA[Default value is 300.]]></comment>
+                </field>
+                <field id="remove_words_if_no_result" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove Words If No Result</label>
+                    <source_model>MelTheDev\MeiliSearch\Model\Source\RemoveWords</source_model>
+                    <comment>
+                        <![CDATA[
+                            By default, MeiliSearch performs "AND" queries between words, which can lead to no results pages when queries are too long or too detailed. To avoid this, you can select among the following options:<br>
+                            <b>LastWords</b>: when a query does not return any result, the last word will be considered as optional and the query will be automatically performed again (the process is repeated with the n-1 word, n-2 word, ... until there is results).<br>
+                            <b>FirstWords</b>: when a query does not return any result, the first word will be considered as optional and the query will be automatically performed again (the process is repeated with the second word, third word, ... until there is results).<br>
+                            <b>allOptional</b>: when a query does not return any result, all words will be optional.
+                            None: No specific processing is done when a query does not return any result. <br>
+                        ]]>
+                    </comment>
+                </field>
+                <field id="partial_update" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Partial Updates</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to use <code>partialUpdateObjects</code> instead of <code>addObjects</code>?<br>
+                            You should enable this option if you want to update only some attributes of your records from an external source without avoiding overriding Magento data.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="customer_groups_enable" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Customer Groups</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to take into account customer groups and display the price of the logged-in group instead of the default price?
+                            <br><span class="">&#9888;</span> If you want to sort by the  <code>price</code> attribute on the instant search results page, this option will create a replica index for each customer group, thereby multiplying the amount of records in MeiliSearch.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="remove_pub_dir_in_url" translate="label comment" type="select" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove pub/ from image URLs</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want to replace an image URL like <code>example.com/<b>pub/</b>media/image.jpg</code> by <code>example.com/media/image.jpg</code>?<br>
+                            Activate this if your server is set to use the <code>pub/</code> directory as a root directory.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="make_seo_request" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Make a backend search query</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want MeiliSearch to perform backend search queries on the search results page?<br>
+                            MeiliSearch works only on the frontend and by default it us up to Magento to fetch the results for backend rendered pages.
+                            Activate this to let MeiliSearch return results to Magento's backend rendered pages.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="remove_branding" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Remove branding logo</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="index_product_on_category_products_update" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update products in changed category?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want the extension to automatically update the product index when a category is changed?
+                        ]]>
+                    </comment>
+                </field>
+                <field id="prevent_backend_rendering" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prevent backend rendering</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            <span class="">&#9888;</span>
+                            By preventing your store from backend rendering you might break your SEO and accessibility of your store by search crawlers.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="prevent_backend_rendering_display_mode" translate="label comment" type="select" sortOrder="75" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prevent backend rendering for</label>
+                    <source_model>MelTheDev\MeiliSearch\Model\Source\BackendRenderingDisplayMode</source_model>
+                    <depends>
+                        <field id="prevent_backend_rendering">1</field>
+                    </depends>
+                </field>
+                <field id="backend_rendering_allowed_user_agents" translate="label comment" type="MelTheDev\MeiliSearch\Model\Textarea" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow backend rendering for User Agents</label>
+                    <comment><![CDATA[To specify multiple User-Agents, please put one User-Agent per line.]]></comment>
+                    <depends>
+                        <field id="prevent_backend_rendering">1</field>
+                    </depends>
+                </field>
+                <field id="non_castable_attributes" translate="label comment" type="text" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product numeric textfield attributes</label>
+                    <frontend_model>MelTheDev\MeiliSearch\Model\Source\ProductTextAttributes</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Choose here the textfield attributes that you don't want to be turned into numeric values (i.e. : if you don't want "00123" turned into "123")
+                        ]]>
+                    </comment>
+                </field>
+                <field id="archive_clear_limit" translate="label comment" type="text" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Archive log clean limit</label>
+                    <comment>
+                        <![CDATA[
+                            (In days - default value is 30) Sets the limit when the oldest records should be cleared from the archive logs (melthedev_meilisearch_queue_archive).
+                        ]]>
+                    </comment>
+                </field>
+                <field id="max_record_size_limit" translate="label comment" type="text" sortOrder="96" showInDefault="1">
+                    <label>Max record size limit per record</label>
+                    <comment>
+                        <![CDATA[
+                            By default, the MeiliSearch extension has a record size limit of 10 kB per record.
+                            If your MeiliSearch plan allows a higher record size limit, you can customize the record size limit.]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,35 @@
+{
+  "name": "melthedev/module-meili-search",
+  "version": "1.0.0",
+  "description": "Magento MeiliSearch",
+  "type": "magento2-module",
+  "keywords": ["magento","search", "meilisearch", "instant", "php"],
+  "require": {
+    "php": "^8.0|^8.1",
+    "magento/framework": "~102.0|~103.0",
+    "meilisearch/meilisearch-php": "^1.3",
+    "ext-json": "*",
+    "ext-PDO": "*",
+    "ext-mbstring": "*",
+    "ext-dom": "*"
+  },
+  "license": ["MIT"],
+  "authors": [
+    {
+      "name": "MelTheDev",
+      "email": "mel@melthedev.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  ],
+  "autoload": {
+    "files": ["registration.php"],
+    "psr-4": {
+      "MelTheDev\\MeiliSearch\\": ""
+    }
+  }
+}

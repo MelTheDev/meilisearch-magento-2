@@ -1,0 +1,27 @@
+<?php
+/** @var \MelTheDev\MeiliSearch\ViewModel\Recommend\ProductView $viewModel */
+$viewModel = $block->getViewModel();
+$recommendConfig =  $viewModel->getRecommendConfiguration();
+
+if (isset($recommendConfig['enabledFBT']) || isset($recommendConfig['enabledRelated']) || isset($recommendConfig['isTrendItemsEnabledInPDP'])):
+    $product = $viewModel->getProduct(); ?>
+    <div id="frequentlyBoughtTogether" class="recommend-component"></div>
+    <div id="relatedProducts" class="recommend-component"></div>
+    <div id="trendItems" class="trendsItem recommend-component"></div>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "MelTheDev_MeiliSearch/recommend" : {
+                    "algoliObjectId" : ["<?= $product->getId() ?>"]
+                }
+            }
+        }
+    </script>
+    <script type="text/x-magento-init">
+        {
+            "[data-role=tocart-form]": {
+                "catalogAddToCart": {}
+            }
+        }
+    </script>
+<?php endif; ?>

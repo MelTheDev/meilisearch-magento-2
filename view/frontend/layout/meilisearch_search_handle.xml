@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="MelTheDev_MeiliSearch::internals/autocomplete.css" />
+        <css src="MelTheDev_MeiliSearch::internals/grid.css" />
+        <css src="MelTheDev_MeiliSearch::internals/algolia-reset.css" />
+        <css src="MelTheDev_MeiliSearch::internals/instantsearch.v3.css" />
+        <css src="MelTheDev_MeiliSearch::internals/recommend.css" />
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="meilisearch.internals.configuration" template="MelTheDev_MeiliSearch::internals/configuration.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MelTheDev\MeiliSearch\ViewModel\Configuration</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceBlock name="main.content">
+            <block before="-" name="meilisearch.beforecontent" template="MelTheDev_MeiliSearch::internals/beforecontent.phtml"/>
+        </referenceBlock>
+
+        <referenceBlock name="before.body.end">
+            <!-- Instant search results page templates -->
+            <block name="meilisearch.instant.wrapper" template="MelTheDev_MeiliSearch::instant/wrapper.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MelTheDev\MeiliSearch\ViewModel\Wrapper</argument>
+                </arguments>
+            </block>
+            <block name="meilisearch.instant.hit" template="MelTheDev_MeiliSearch::instant/hit.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MelTheDev\MeiliSearch\ViewModel\Hit</argument>
+                </arguments>
+            </block>
+            <block name="meilisearch.instant.stats" template="MelTheDev_MeiliSearch::instant/stats.phtml"/>
+            <block name="meilisearch.instant.facet" template="MelTheDev_MeiliSearch::instant/facet.phtml"/>
+            <block name="meilisearch.instant.refinements" template="MelTheDev_MeiliSearch::instant/refinements.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="top.search">
+            <action method="setTemplate" ifconfig="melthedev_meilisearch_autocomplete/autocomplete/is_popup_enabled">
+                <argument name="setTemplate" xsi:type="string">MelTheDev_MeiliSearch::autocomplete.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

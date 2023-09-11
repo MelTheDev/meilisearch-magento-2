@@ -1,0 +1,19 @@
+<?php
+/*** @var \Magento\Framework\View\Element\Template $block */
+/*** @var \MelTheDev\MeiliSearch\Block\MeiliSearch $blockInstance */
+
+$blockInstance= $block->getLayout()->createBlock(\MelTheDev\MeiliSearch\Block\MeiliSearch::class);
+$config = $blockInstance->getConfigHelper();
+$catalogSearchHelper = $blockInstance->getCatalogSearchHelper();
+
+// Render form with autocomplete input
+if ($config->isAutoCompleteEnabled()) : ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "algoliaAutocomplete": {}
+            }
+        }
+    </script>
+    <div id="algoliaAutocomplete" class="block block-search algolia-search-block meilisearch-search-input"></div>
+<?php endif;?>

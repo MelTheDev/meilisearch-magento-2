@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="melthedev_meilisearch_queue" resource="default" engine="innodb" comment="MelTheDev MeiliSearch Queue Table">
+        <column xsi:type="int" name="job_id" unsigned="false" nullable="false" identity="true" comment="Job Id"/>
+        <column xsi:type="int" name="pid" unsigned="true" nullable="true" identity="false" comment="PID"/>
+        <column xsi:type="varchar" name="class" nullable="false" length="50" comment="class"/>
+        <column xsi:type="text" name="method" nullable="false" comment="Method"/>
+        <column xsi:type="text" name="data" nullable="false" comment="Data"/>
+        <column xsi:type="int" name="max_retries" unsigned="true" nullable="false" default="3" identity="false" comment="Max Retries"/>
+        <column xsi:type="int" name="retries" unsigned="true" nullable="false" default="0" identity="false" comment="Retries"/>
+        <column xsi:type="text" name="error_log" nullable="false" comment="Error Log"/>
+        <column xsi:type="int" name="data_size" unsigned="true" nullable="true" identity="false" comment="Data Size"/>
+        <column xsi:type="datetime" name="created" on_update="true" nullable="true" comment="Date and time of job creation"/>
+        <column xsi:type="int" name="is_full_reindex" unsigned="true" nullable="false" default="0" identity="false" comment="Indicates if the job is part of a full reindex"/>
+        <column xsi:type="datetime" name="locked_at" on_update="false" nullable="true" comment="Indicates time where PID was assigned to the job"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="job_id"/>
+        </constraint>
+    </table>
+    <table name="melthedev_meilisearch_queue_log" resource="default" engine="innodb" comment="MeiliSearch Queue Log Table">
+        <column xsi:type="int" name="id" unsigned="false" nullable="false" identity="true" comment="Job Id"/>
+        <column xsi:type="datetime" name="started" on_update="false" nullable="false" comment="Queue Started Date Time"/>
+        <column xsi:type="int" name="duration" unsigned="true" padding="20" nullable="false" identity="false" comment="Duration"/>
+        <column xsi:type="int" name="processed_jobs" unsigned="true" nullable="false" identity="false" comment="Processed Jobs"/>
+        <column xsi:type="int" name="with_empty_queue" unsigned="true" nullable="false" identity="false" comment="With Empty Queue"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="melthedev_meilisearch_queue_archive" resource="default" engine="innodb" comment="MeiliSearch Queue Archive Table">
+        <column xsi:type="int" name="pid" unsigned="true" nullable="true" identity="false" comment="PID"/>
+        <column xsi:type="varchar" name="class" nullable="false" length="50" comment="class"/>
+        <column xsi:type="text" name="method" nullable="false" comment="Method"/>
+        <column xsi:type="text" name="data" nullable="false" comment="Data"/>
+        <column xsi:type="text" name="error_log" nullable="false" comment="Error Log"/>
+        <column xsi:type="int" name="data_size" unsigned="true" nullable="true" identity="false" comment="Data Size"/>
+        <column xsi:type="datetime" name="created_at" on_update="true" nullable="true" comment="Date and time of job creation"/>
+    </table>
+    <table name="melthedev_meilisearch_landing_page" resource="default" engine="innodb" comment="MeiliSearch Landing Page Table">
+        <column xsi:type="int" name="landing_page_id" unsigned="false" nullable="false" identity="true" comment="Landing Page Id"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="true" identity="false" comment="Store Id"/>
+        <column xsi:type="text" name="url_key" nullable="false" comment="Url Key"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" identity="false" default="0" comment="Is Active"/>
+        <column xsi:type="text" name="title" nullable="false" comment="Page Title"/>
+        <column xsi:type="text" name="meta_title" nullable="true" comment="Meta Title"/>
+        <column xsi:type="text" name="meta_description" nullable="true" comment="Meta Description"/>
+        <column xsi:type="text" name="meta_keywords" nullable="true" comment="Meta Keywords"/>
+        <column xsi:type="text" name="content" nullable="true" comment="Content"/>
+        <column xsi:type="text" name="query" nullable="true" comment="Query"/>
+        <column xsi:type="text" name="configuration" nullable="true" comment="Configuration"/>
+        <column xsi:type="text" name="custom_js" nullable="true" comment="Custom Js"/>
+        <column xsi:type="text" name="custom_css" nullable="true" comment="Custom CSS"/>
+        <column xsi:type="datetime" name="date_from" nullable="true" comment="Date From"/>
+        <column xsi:type="datetime" name="date_to" nullable="true" comment="Date To"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="landing_page_id"/>
+        </constraint>
+    </table>
+    <table name="melthedev_meilisearch_query" resource="default" engine="innodb" comment="MeiliSearch Landing Page Table">
+        <column xsi:type="smallint" name="query_id" unsigned="false" nullable="false" identity="true" comment="Landing Page Id"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="true" identity="false" comment="Store Id"/>
+        <column xsi:type="text" name="query_text" nullable="false" comment="Query Text"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" identity="false" default="0" comment="Is Active"/>
+        <column xsi:type="text" name="banner_image" nullable="false" comment="Banner Image"/>
+        <column xsi:type="text" name="banner_url" nullable="true" comment="Banner Url"/>
+        <column xsi:type="text" name="banner_alt" nullable="true" comment="Banner Alt"/>
+        <column xsi:type="text" name="banner_content" nullable="true" comment="Banner Content"/>
+        <column xsi:type="datetime" name="created_at" nullable="true" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="query_id"/>
+        </constraint>
+    </table>
+    <table name="quote_item" resource="checkout" engine="innodb" comment="Sales Flat Quote Item">
+        <column xsi:type="text" name="melthedev_meilisearch_query_param" nullable="true" comment="Reference for MeiliSearch analytics order conversion"/>
+    </table>
+    <table name="sales_order_item" resource="sales" engine="innodb" comment="Sales Flat Order Item">
+        <column xsi:type="text" name="melthedev_meilisearch_query_param" nullable="true" comment="Reference for MeiliSearch analytics order conversion"/>
+    </table>
+</schema>
+
+
+
+
+
+
+
+

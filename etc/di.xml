@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="MelTheDev\MeiliSearch\Api\Data\JobInterface" type="MelTheDev\MeiliSearch\Model\Job" />
+
+    <type name="Magento\Catalog\Model\ResourceModel\Product">
+        <plugin name="MelTheDev_MeiliSearch::meiliSearchProducts" type="MelTheDev\MeiliSearch\Plugin\Model\ResourceModel\Product"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Action">
+        <plugin name="MelTheDev_MeiliSearch::meiliSearchProductsMassAction" type="MelTheDev\MeiliSearch\Plugin\Model\ResourceModel\Product"/>
+    </type>
+    <type name="Magento\Cms\Model\ResourceModel\Page">
+        <plugin name="MelTheDev_MeiliSearch::meiliSearchPages" type="MelTheDev\MeiliSearch\Plugin\Model\ResourceModel\Page"/>
+    </type>
+</config>
