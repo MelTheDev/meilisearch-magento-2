@@ -398,7 +398,9 @@ class Configuration implements ArgumentInterface
                 'nbOfCategoriesSuggestions' => $config->getNumberOfCategoriesSuggestions(),
                 'nbOfQueriesSuggestions' => $config->getNumberOfQueriesSuggestions(),
                 'isDebugEnabled' => $config->isAutocompleteDebugEnabled(),
-                'isNavigatorEnabled' => $config->isAutocompleteNavigatorEnabled()
+                'isNavigatorEnabled' => $config->isAutocompleteNavigatorEnabled(),
+                'debounceMilliseconds' => $config->getAutocompleteDebounceMilliseconds(),
+                'minimumCharacters' => $config->getAutocompleteMinimumCharacterLength()
             ],
             'indexName'       => $coreHelper->getBaseIndexName(),
             'apiUrl'          => $config->getApiUrl(),

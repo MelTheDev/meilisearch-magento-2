@@ -4,6 +4,8 @@ namespace MelTheDev\MeiliSearch\Helper;
 
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product;
+use Magento\Search\Model\Query;
+use MelTheDev\MeiliSearch\Exception\MissingObjectId;
 use MelTheDev\MeiliSearch\Helper\Entity\PageHelper;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Framework\App\Area;
@@ -14,6 +16,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\App\Emulation;
 use Magento\Store\Model\StoreManagerInterface;
+use MelTheDev\MeiliSearch\Helper\Entity\SuggestionHelper;
 use MelTheDev\MeiliSearch\Logger\Logger;
 
 class Data
@@ -55,6 +58,8 @@ class Data
         MeiliSearchHelper $meiliSearchHelper,
         CategoryHelper $categoryHelper,
         private PageHelper $pageHelper,
+        private AdditionalSectionHelper $additionalSectionHelper,
+        private SuggestionHelper $suggestionHelper,
         State $appState
     ) {
         $this->configHelper = $configHelper;
@@ -191,6 +196,142 @@ class Data
     }
 
     /**
+     * @param int $storeId
+     * @return void
+     * @throws MissingObjectId
+     * @throws NoSuchEntityException|LocalizedException
+     */
+    public function rebuildStoreAdditionalSectionsIndex($storeId)
+    {
+        if ($this->isIndexingEnabled($storeId) === false) {
+            return;
+        }
+
+        $additionalSections = $this->configHelper->getAutocompleteSections();
+
+        $protectedSections = ['products', 'categories', 'pages', 'suggestions'];
+        foreach ($additionalSections as $section) {
+            if (in_array($section['name'], $protectedSections, true)) {
+                continue;
+            }
+
+            $indexName = $this->getIndexName($this->additionalSectionHelper->getIndexNameSuffix(), $storeId);
+            $indexName = $indexName . '_' . $section['name'];
+
+            $attributeValues = $this->additionalSectionHelper->getAttributeValues($storeId, $section);
+
+            foreach (array_chunk($attributeValues, 100) as $chunk) {
+                //$this->meiliSearchHelper->addObjects($chunk, $indexName . '_tmp');
+                $this->meiliSearchHelper->addObjects($chunk, $indexName);
+            }
+
+            //$this->meiliSearchHelper->copyQueryRules($indexName, $indexName . '_tmp');
+            //$this->meiliSearchHelper->moveIndex($indexName . '_tmp', $indexName);
+
+            $this->meiliSearchHelper->setSettings($indexName, $this->additionalSectionHelper->getIndexSettings());
+        }
+    }
+
+    /**
+     * @param $storeId
+     * @return void
+     * @throws MissingObjectId
+     * @throws NoSuchEntityException
+     */
+    public function rebuildStoreSuggestionIndex($storeId)
+    {
+        if ($this->isIndexingEnabled($storeId) === false ||
+            !$this->configHelper->isQuerySuggestionsIndexEnabled($storeId)
+        ) {
+            return;
+        }
+
+        if (!$this->configHelper->isQuerySuggestionsIndexEnabled($storeId)) {
+            $this->logger->log('Query Suggestions Indexing is not enabled for the store.');
+            return;
+        }
+
+        $collection = $this->suggestionHelper->getSuggestionCollectionQuery($storeId);
+        $size = $collection->getSize();
+
+        if ($size > 0) {
+            $pages = ceil($size / $this->configHelper->getNumberOfElementByPage());
+            $collection->clear();
+            $page = 1;
+
+            while ($page <= $pages) {
+                $this->rebuildStoreSuggestionIndexPage(
+                    $storeId,
+                    $collection,
+                    $page,
+                    $this->configHelper->getNumberOfElementByPage()
+                );
+                $page++;
+            }
+            unset($indexData);
+        }
+        //$this->moveStoreSuggestionIndex($storeId);
+    }
+
+//    /**
+//     * @param $storeId
+//     * @return void
+//     */
+//    public function moveStoreSuggestionIndex($storeId)
+//    {
+//        if ($this->isIndexingEnabled($storeId) === false) {
+//            return;
+//        }
+//
+//        $indexNameSuffix = $this->suggestionHelper->getIndexNameSuffix();
+//        $tmpIndexName = $this->getIndexName($indexNameSuffix, $storeId, true);
+//        $indexName = $this->getIndexName($indexNameSuffix, $storeId);
+//        $this->meiliSearchHelper->copyQueryRules($indexName, $tmpIndexName);
+//        $this->meiliSearchHelper->moveIndex($tmpIndexName, $indexName);
+//    }
+
+    /**
+     * @param $storeId
+     * @param $collectionDefault
+     * @param $page
+     * @param $pageSize
+     * @return void
+     * @throws MissingObjectId
+     * @throws NoSuchEntityException
+     */
+    public function rebuildStoreSuggestionIndexPage($storeId, $collectionDefault, $page, $pageSize)
+    {
+        if ($this->isIndexingEnabled($storeId) === false) {
+            return;
+        }
+
+        /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $collection */
+        $collection = clone $collectionDefault;
+        $collection->setCurPage($page)->setPageSize($pageSize);
+        $collection->load();
+        //$indexName = $this->getIndexName($this->suggestionHelper->getIndexNameSuffix(), $storeId, true);
+        $indexName = $this->getIndexName($this->suggestionHelper->getIndexNameSuffix(), $storeId);
+        $indexData = [];
+
+        /** @var Query $suggestion */
+        foreach ($collection as $suggestion) {
+            $suggestion->setStoreId($storeId);
+            $suggestionObject = $this->suggestionHelper->getObject($suggestion);
+            if (mb_strlen($suggestionObject['query']) >= 3) {
+                array_push($indexData, $suggestionObject);
+            }
+        }
+
+        if (count($indexData) > 0) {
+            $this->meiliSearchHelper->addObjects($indexData, $indexName);
+        }
+        unset($indexData);
+        $collection->walk('clearInstance');
+        $collection->clear();
+        unset($collection);
+    }
+
+    /**
      * @param $storeId
      * @param $collectionDefault
      * @param $page
@@ -200,7 +341,7 @@ class Data
      * @param $useTmpIndex
      * @param $indexName
      * @return void
-     * @throws NoSuchEntityException
+     * @throws NoSuchEntityException|MissingObjectId
      */
     public function rebuildStoreProductIndexPage(
         $storeId,

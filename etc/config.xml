@@ -9,6 +9,7 @@
                 <enable_backend>1</enable_backend>
                 <enable_frontend>1</enable_frontend>
                 <debug>0</debug>
+                <enable_query_suggestions_index>0</enable_query_suggestions_index>
             </credentials>
         </melthedev_meilisearch_credentials>
         <melthedev_meilisearch_autocomplete>
@@ -25,6 +26,8 @@
                 <sections><![CDATA[{"_1600351750374_374":{"name":"pages","label":"Pages","hitsPerPage":"2"}}]]></sections>
                 <excluded_pages><![CDATA[{"_1600351757831_831":{"attribute":"no-route"}}]]></excluded_pages>
                 <navigator>1</navigator>
+                <debounce_millisec>300</debounce_millisec>
+                <minimum_char_length>0</minimum_char_length>
             </autocomplete>
         </melthedev_meilisearch_autocomplete>
         <melthedev_meilisearch_instant>

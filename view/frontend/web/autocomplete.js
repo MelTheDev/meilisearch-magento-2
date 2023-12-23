@@ -16,6 +16,8 @@ define(
     function ($, algoliaBundle, meiliSearchBundle, pagesHtml, categoriesHtml, productsHtml, suggestionsHtml, additionalHtml) {
 
         const DEFAULT_HITS_PER_SECTION = 2;
+        const DEBOUNCE_MS = algoliaConfig.autocomplete.debounceMilliseconds;
+        const MIN_SEARCH_LENGTH_CHARS = algoliaConfig.autocomplete.minimumCharacters;
 
         // global state
         let suggestionSection = false;
@@ -384,7 +386,28 @@ define(
                     };
                 },
             });
+        };
+
+        const filterMinChars = (query, result) => {
+            return (query.length >= MIN_SEARCH_LENGTH_CHARS)
+                ? result
+                : [];
         }
+
+        const debouncePromise = (fn, time) => {
+            let timerId = undefined;
+
+            return function debounced(...args) {
+                if (timerId) {
+                    clearTimeout(timerId);
+                }
+
+                return new Promise((resolve) => {
+                    timerId = setTimeout(() => resolve(fn(...args)), time);
+                });
+            };
+        };
+        const debounced = debouncePromise((items) => Promise.resolve(items), DEBOUNCE_MS);
 
         /**
          * Load suggestions, products and categories as configured
@@ -439,9 +462,15 @@ define(
                     window.location.href = algoliaConfig.resultPageUrl + `?q=${data.state.query}`;
                 }
             },
-            getSources() {
+            /*getSources() {
                 return autocompleteConfig;
+            },*/
+            getSources({query}) {
+                return filterMinChars(query, debounced(autocompleteConfig));
             },
+            shouldPanelOpen({ state }) {
+                return state.query.length >= MIN_SEARCH_LENGTH_CHARS;
+            }
         };
 
         if (isMobile() === true) {
@@ -488,7 +517,7 @@ define(
                 noResults: () => 'No results',
                 header: () => data.sourceId,
                 item: ({item}) => {
-                    console.error(`Algolia Autocomplete: No template defined for source "${data.sourceId}"`);
+                    console.error(`MeiliSearch Autocomplete: No template defined for source "${data.sourceId}"`);
                     return '[ITEM TEMPLATE MISSING]';
                 }
             };
@@ -530,7 +559,5 @@ define(
         if (algoliaConfig.autocomplete.isNavigatorEnabled) {
             $("body").append('<style>.aa-Item[aria-selected="true"]{background-color: #f2f2f2;}</style>');
         }
-
-
     }
 );

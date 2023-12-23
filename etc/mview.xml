@@ -33,4 +33,8 @@
     </view>
     <view id="melthedev_meilisearch_delete_products" class="MelTheDev\MeiliSearch\Model\Indexer\DeleteProduct" group="indexer">
     </view>
+    <view id="melthedev_meilisearch_suggestions" class="MelTheDev\MeiliSearch\Model\Indexer\Suggestion" group="indexer">
+    </view>
+    <view id="melthedev_meilisearch_additional_sections" class="MelTheDev\MeiliSearch\Model\Indexer\AdditionalSection" group="indexer">
+    </view>
 </config>
