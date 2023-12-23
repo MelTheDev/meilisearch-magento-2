@@ -1,4 +1,4 @@
-# MeiliSearch for Magento (WIP)
+# MeiliSearch for Magento
 #### Warning - This project is currently in active development, so it may contain various bugs or errors. Please proceed with caution and use it at your own risk.
 
 This project is designed to enable Magento to work with MeiliSearch instead of ElasticSearch/OpenSearch. It utilizes code similar to **Algolia**, as it is a modified version of Algolia tailored to function with MeiliSearch.
