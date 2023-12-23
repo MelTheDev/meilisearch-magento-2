@@ -11,12 +11,6 @@ use MelTheDev\MeiliSearch\Model\Queue;
 
 class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Framework\Mview\ActionInterface
 {
-    private ProductHelper $productHelper;
-    private StoreManagerInterface $storeManager;
-    private ConfigHelper $configHelper;
-    private Data $dataHelper;
-    private Queue $queue;
-
     /**
      * Product constructor.
      * @param ProductHelper $productHelper
@@ -24,21 +18,20 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
      * @param Data $dataHelper
      * @param Queue $queue
      * @param StoreManagerInterface $storeManager
+     * @noinspection PhpPropertyCanBeReadonlyInspection
      */
     public function __construct(
-        ProductHelper $productHelper,
-        ConfigHelper $configHelper,
-        Data $dataHelper,
-        Queue $queue,
-        StoreManagerInterface $storeManager
+        private ProductHelper $productHelper,
+        private ConfigHelper $configHelper,
+        private Data $dataHelper,
+        private Queue $queue,
+        private StoreManagerInterface $storeManager
     ) {
-        $this->productHelper = $productHelper;
-        $this->configHelper  = $configHelper;
-        $this->dataHelper    = $dataHelper;
-        $this->storeManager  = $storeManager;
-        $this->queue         = $queue;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function execute($ids)
     {
         $productIds = $ids;
@@ -104,16 +97,23 @@ class Product implements \Magento\Framework\Indexer\ActionInterface, \Magento\Fr
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function executeFull()
     {
         $this->execute(null);
     }
-
+    /**
+     * @inheritDoc
+     */
     public function executeList(array $ids)
     {
         $this->execute($ids);
     }
-
+    /**
+     * @inheritDoc
+     */
     public function executeRow($id)
     {
         $this->execute([$id]);

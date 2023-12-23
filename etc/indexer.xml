@@ -23,4 +23,16 @@
             Run it only when you want to remove inactive / deleted products from MeiliSearch.
         </description>
     </indexer>
+    <indexer id="melthedev_meilisearch_suggestions" view_id="melthedev_meilisearch_suggestions" class="MelTheDev\MeiliSearch\Model\Indexer\Suggestion">
+        <title translate="true">MeiliSearch Search Suggestions</title>
+        <description translate="true">
+            Rebuild suggestion index.
+        </description>
+    </indexer>
+    <indexer id="melthedev_meilisearch_additional_sections" view_id="melthedev_meilisearch_additional_sections" class="MelTheDev\MeiliSearch\Model\Indexer\AdditionalSection">
+        <title translate="true">MeiliSearch Additional Sections</title>
+        <description translate="true">
+            Rebuild additional sections index.
+        </description>
+    </indexer>
 </config>

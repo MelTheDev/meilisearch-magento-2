@@ -19,6 +19,7 @@ class ConfigHelper
     public const ENABLE_BACKEND  = 'melthedev_meilisearch_credentials/credentials/enable_backend';
     public const LOGGING_ENABLED = 'melthedev_meilisearch_credentials/credentials/debug';
     public const INDEX_PREFIX    = 'melthedev_meilisearch_credentials/credentials/index_prefix';
+    public const ENABLE_QUERY_SUGGESTIONS_INDEX = 'melthedev_meilisearch_credentials/credentials/enable_query_suggestions_index';
 
     public const IS_INSTANT_ENABLED = 'melthedev_meilisearch_instant/instant/is_instant_enabled';
     public const REPLACE_CATEGORIES = 'melthedev_meilisearch_instant/instant/replace_categories';
@@ -31,6 +32,7 @@ class ConfigHelper
     public const XML_ADD_TO_CART_ENABLE = 'melthedev_meilisearch_instant/instant/add_to_cart_enable';
     public const INFINITE_SCROLL_ENABLE = 'melthedev_meilisearch_instant/instant/infinite_scroll_enable';
     public const SEARCHBOX_ENABLE = 'melthedev_meilisearch_instant/instant/instantsearch_searchbox';
+    public const SHOW_SUGGESTIONS_NO_RESULTS = 'melthedev_meilisearch_instant/instant/show_suggestions_on_no_result_page';
 
     public const PRODUCT_ATTRIBUTES = 'melthedev_meilisearch_products/products/product_additional_attributes';
     public const PRODUCT_CUSTOM_RANKING = 'melthedev_meilisearch_products/products/custom_ranking_product_attributes';
@@ -82,6 +84,8 @@ class ConfigHelper
     public const MIN_NUMBER_OF_RESULTS = 'melthedev_meilisearch_autocomplete/autocomplete/min_number_of_results';
     public const RENDER_TEMPLATE_DIRECTIVES = 'melthedev_meilisearch_autocomplete/autocomplete/render_template_directives';
     public const AUTOCOMPLETE_MENU_DEBUG = 'melthedev_meilisearch_autocomplete/autocomplete/debug';
+    public const AUTOCOMPLETE_DEBOUNCE_MILLISEC = 'melthedev_meilisearch_autocomplete/autocomplete/debounce_millisec';
+    public const AUTOCOMPLETE_MINIMUM_CHAR_LENGTH = 'melthedev_meilisearch_autocomplete/autocomplete/minimum_char_length';
 
     private const AUTOCOMPLETE_KEYBORAD_NAVIAGATION = 'melthedev_meilisearch_autocomplete/autocomplete/navigator';
 
@@ -96,6 +100,8 @@ class ConfigHelper
         = 'melthedev_meilisearch_recommend/recommend/frequently_bought_together/is_remove_core_upsell_products_block';
     private const IS_TREND_ITEMS_ENABLED_IN_PDP
         = 'melthedev_meilisearch_recommend/recommend/trends_item/is_trending_items_enabled_on_pdp';
+
+    public const MAGENTO_DEFAULT_CACHE_TIME = 'system/full_page_cache/ttl';
 
     /**
      * ConfigHelper constructor.
@@ -241,6 +247,15 @@ class ConfigHelper
             return $unSerialized;
         }
         return $this->serializer->unserialize($value);
+    }
+
+    /**
+     * @param $storeId
+     * @return bool
+     */
+    public function isQuerySuggestionsIndexEnabled($storeId = null)
+    {
+        return $this->scopeConfig->isSetFlag(self::ENABLE_QUERY_SUGGESTIONS_INDEX, ScopeInterface::SCOPE_STORE, $storeId);
     }
 
     /**
@@ -833,6 +848,24 @@ class ConfigHelper
         );
     }
 
+    public function getAutocompleteDebounceMilliseconds($storeId = null): int
+    {
+        return (int) $this->scopeConfig->getValue(
+            self::AUTOCOMPLETE_DEBOUNCE_MILLISEC,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    public function getAutocompleteMinimumCharacterLength($storeId = null): int
+    {
+        return (int) $this->scopeConfig->getValue(
+            self::AUTOCOMPLETE_MINIMUM_CHAR_LENGTH,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
     /**
      * @param $storeId
      * @return int
@@ -1146,5 +1179,49 @@ class ConfigHelper
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return int
+     */
+    public function getCacheTime($storeId = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::MAGENTO_DEFAULT_CACHE_TIME,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function showSuggestionsOnNoResultsPage($storeId = null)
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::SHOW_SUGGESTIONS_NO_RESULTS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return int
+     */
+    public function getMinNumberOfResults($storeId = null)
+    {
+        return (int)$this->scopeConfig->getValue(self::MIN_NUMBER_OF_RESULTS, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * @param int|null $storeId
+     * @return int
+     */
+    public function getMinPopularity($storeId = null)
+    {
+        return (int)$this->scopeConfig->getValue(self::MIN_POPULARITY, ScopeInterface::SCOPE_STORE, $storeId);
     }
 }
